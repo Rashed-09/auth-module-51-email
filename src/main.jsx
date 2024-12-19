@@ -7,6 +7,10 @@ import Register from './components/Register'
 import Login from './components/Login'
 import Root from './components/Root'
 import ErrorPage from './components/ErrorPage'
+import AuthProvider from './provider/AuthProvider'
+import Order from './components/Order'
+import PrivetRout from './privet/PrivetRout'
+import Profile from './components/Profile'
 
 
 const router = createBrowserRouter([
@@ -17,22 +21,32 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home></Home>
+        element: <Home></Home>,
       },
       {
         path: "/register",
-        element: <Register></Register>
+        element: <Register></Register>,
       },
       {
         path: "/login",
-        element: <Login></Login>
+        element: <Login></Login>,
+      },
+      {
+        path: "/order",
+        element: <PrivetRout><Order></Order></PrivetRout>
+      },
+      {
+        path: "/profile",
+        element: <PrivetRout><Profile></Profile></PrivetRout>
       }
-    ]
-  }
-])
+    ],
+  },
+]);
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router}></RouterProvider>
+    <AuthProvider>
+      <RouterProvider router={router}></RouterProvider>
+    </AuthProvider>
   </StrictMode>
-)
+);

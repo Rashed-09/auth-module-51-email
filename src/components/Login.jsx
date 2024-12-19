@@ -1,7 +1,45 @@
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../provider/AuthProvider";
 
 
 const Login = () => {
+
+  const { signinUser, loginWithGoogle } = useContext(AuthContext);
+  const navigateRout = useNavigate()
+  
+  const loginSubmitHandlar = e => {
+    e.preventDefault()
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+
+    signinUser(email, password)
+    .then (result  => {
+      const user = result.user;
+      e.target.reset()
+      navigateRout("/")
+      console.log(user)
+    })
+    .catch(error => {
+      const errMessage = error.message;
+      console.log(errMessage)
+    })
+
+  }
+  const googleLoginHandlar = () =>{
+    loginWithGoogle()
+    .then(result => {
+      console.log(result.user)
+      navigateRout("/");
+    })
+    .catch(error => {
+      console.log(error.message)
+    })
+  }
+   
+
+
   return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content flex-col lg:flex-row-reverse">
@@ -14,13 +52,14 @@ const Login = () => {
           </p>
         </div>
         <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-          <form className="card-body">
+          <form onSubmit={loginSubmitHandlar} className="card-body">
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
               </label>
               <input
                 type="email"
+                name="email"
                 placeholder="email"
                 className="input input-bordered"
                 required
@@ -32,6 +71,7 @@ const Login = () => {
               </label>
               <input
                 type="password"
+                name="password"
                 placeholder="password"
                 className="input input-bordered"
                 required
@@ -50,6 +90,12 @@ const Login = () => {
               <Link className="underline" to={"/register"}>
                 Register
               </Link>
+            </div>
+            <div className="flex justify-between items-center">
+              <div></div>
+              <div>
+                Login With<button onClick={googleLoginHandlar} className="btn-ghost btn text-xl">Google</button>
+              </div>
             </div>
           </form>
         </div>

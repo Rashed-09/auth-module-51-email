@@ -1,6 +1,28 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../provider/AuthProvider";
 
 const Register = () => {
+
+  const {createUser} = useContext(AuthContext)
+  const registerFormHandlar = e => {
+    e.preventDefault()
+    const nameValue = e.target.name.value;
+    const emailValue = e.target.email.value;
+    const passwordValue = e.target.password.value;
+
+     createUser(emailValue, passwordValue)
+     .then(result => {
+      const loggedUser = result.user;
+      console.log(loggedUser)
+     })
+     .catch(error => {
+      const message = error.message;
+      console.log(message)
+     })
+  }
+
+
     return (
       <div className="hero bg-base-200 min-h-screen">
         <div className="hero-content flex-col lg:flex-row-reverse">
@@ -13,13 +35,14 @@ const Register = () => {
             </p>
           </div>
           <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-            <form className="card-body">
+            <form onSubmit={registerFormHandlar} className="card-body">
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">UserName</span>
                 </label>
                 <input
                   type="text"
+                  name="name"
                   placeholder="name"
                   className="input input-bordered"
                   required
@@ -31,6 +54,7 @@ const Register = () => {
                 </label>
                 <input
                   type="email"
+                  name="email"
                   placeholder="email"
                   className="input input-bordered"
                   required
@@ -42,6 +66,7 @@ const Register = () => {
                 </label>
                 <input
                   type="password"
+                  name="password"
                   placeholder="password"
                   className="input input-bordered"
                   required
@@ -57,7 +82,9 @@ const Register = () => {
               </div>
               <div className="flex gap-3">
                 <span>If You have an Account</span>
-                <Link className="underline" to={"/login"}>Login</Link>
+                <Link className="underline" to={"/login"}>
+                  Register
+                </Link>
               </div>
             </form>
           </div>

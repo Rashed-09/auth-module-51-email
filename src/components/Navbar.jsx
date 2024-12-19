@@ -1,6 +1,15 @@
-import { NavLink } from "react-router-dom";
+import { useContext } from "react";
+import { Link, NavLink } from "react-router-dom";
+import { AuthContext } from "../provider/AuthProvider";
 
 const Navbar = () => {
+  const {user, logOut} = useContext(AuthContext)
+  const signOutHandlar = () =>{
+    logOut()
+    .then(() => console.log("LogOut successfully"))
+    .catch(error => console.log(error.message))
+  }
+  
     const linkStyle = {
         display: "flex",
         gap: "20px"
@@ -9,6 +18,13 @@ const Navbar = () => {
         <NavLink to={"/"}>Home</NavLink>
         <NavLink to={"/login"}>Login</NavLink>
         <NavLink to={"/register"}>Register</NavLink>
+        <NavLink to={"/order"}>Order</NavLink>
+        {
+          user && <>
+          <NavLink to={"/profile"}>Profile</NavLink>
+          <NavLink to={"/dashboard"}>Dashboard</NavLink>
+          </>
+        }
     </div>
     return (
       <div className="navbar bg-base-100 my-5">
@@ -34,18 +50,23 @@ const Navbar = () => {
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
-                {linkes}
+              {linkes}
             </ul>
           </div>
           <a className="btn btn-ghost text-xl">Address Distribution Auth</a>
         </div>
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
-            {linkes}
-          </ul>
+          <ul className="menu menu-horizontal px-1">{linkes}</ul>
         </div>
         <div className="navbar-end">
-          <a className="btn">Apply</a>
+          {user ? (
+            <div>
+              {user.email}
+              <button onClick={signOutHandlar} className="btn">Sing Out</button>
+            </div>
+          ) : (
+            <Link to={"/login"}>Login</Link>
+          )}
         </div>
       </div>
     );
